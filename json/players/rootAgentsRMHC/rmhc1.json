@@ -1,0 +1,11 @@
+{
+	"class" : "players.rmhc.RMHCParams",
+	"horizon": 10,
+	"discountFactor": 0.9,
+	"budgetType" : "BUDGET_TIME",
+	"budget" : 50,
+	"breakMS" : 0,
+	"heuristic" : {
+		"class" : "games.root_final.RootHeuristic"
+	}
+}

@@ -9,15 +9,29 @@ import evaluation.listeners.IGameListener;
 import evaluation.metrics.Event;
 import evaluation.summarisers.TAGNumericStatSummary;
 import games.GameType;
+import games.root_final.EvolutionaryHeuristicGenerator;
+import games.root_final.RootHeuristic;
 import gui.AbstractGUIManager;
 import gui.GUI;
 import gui.GamePanel;
+import players.PlayerConstants;
 import players.basicMCTS.BasicMCTSPlayer;
 import players.human.ActionController;
 import players.human.HumanConsolePlayer;
 import players.human.HumanGUIPlayer;
+import players.mcts.MCTSEnums;
+import players.mcts.MCTSParams;
 import players.mcts.MCTSPlayer;
 import players.mcts.MCTSPlayer;
+import players.mctsEAHeuristic.MCTSEAHEnums;
+import players.mctsEAHeuristic.MCTSEAHParams;
+import players.mctsEAHeuristic.MCTSEAHPlayer;
+import players.rhea.RHEAEnums;
+import players.rhea.RHEAParams;
+import players.rhea.RHEAPlayer;
+import players.rheaEAHeuristic.RHEAEAEnums;
+import players.rheaEAHeuristic.RHEAEAParams;
+import players.rheaEAHeuristic.RHEAEAPlayer;
 import players.rmhc.RMHCParams;
 import players.rmhc.RMHCPlayer;
 import players.simple.FirstActionPlayer;
@@ -219,6 +233,7 @@ public class Game {
                 if (s == null) s = System.currentTimeMillis();
                 s += offset;
                 game = runOne(gt, null, players, s, randomizeParameters, listeners, null, turnPause);
+                System.out.println(Arrays.toString(game.gameState.getPlayerResults()));
                 if (game != null) {
                     recordPlayerResults(statSummaries, game);
                     offset = game.getGameState().getRoundCounter() * game.getGameState().getNPlayers();
@@ -828,7 +843,7 @@ public class Game {
      * and then run this class.
      */
     public static void main(String[] args) {
-        String gameType = Utils.getArg(args, "game", "Pandemic");
+        String gameType = Utils.getArg(args, "game", "Root");
         boolean useGUI = Utils.getArg(args, "gui", true);
         int turnPause = Utils.getArg(args, "turnPause", 0);
         long seed = Utils.getArg(args, "seed", System.currentTimeMillis());
@@ -836,9 +851,13 @@ public class Game {
 
         /* Set up players for the game */
         ArrayList<AbstractPlayer> players = new ArrayList<>();
-        players.add(new RandomPlayer());
-        players.add(new RandomPlayer());
-        players.add(new BasicMCTSPlayer());
+        //players.add(new RandomPlayer());
+
+//        players.add(new RandomPlayer());
+//        players.add(new RHEAPlayer(new RHEAParams()));
+//        players.add(new RandomPlayer());
+//        players.add(new RandomPlayer());
+        //players.add(new HumanGUIPlayer(ac));
 
 //        RMHCParams params = new RMHCParams();
 //        params.horizon = 15;
@@ -856,17 +875,184 @@ public class Game {
 //        players.add(new HumanConsolePlayer());
 //        players.add(new FirstActionPlayer());
 
+
+        MCTSParams mctsParams = new MCTSParams();
+        mctsParams.K = 1.0;
+        mctsParams.rolloutLength = 40;
+        mctsParams.maxTreeDepth = 30;
+        mctsParams.treePolicy = MCTSEnums.TreePolicy.UCB;
+        mctsParams.opponentTreePolicy = MCTSEnums.OpponentTreePolicy.OneTree;
+        mctsParams.selectionPolicy = MCTSEnums.SelectionPolicy.SIMPLE;
+        mctsParams.information = MCTSEnums.Information.Information_Set;
+        mctsParams.rolloutType = MCTSEnums.Strategies.RANDOM;
+        mctsParams.exploreEpsilon = 1e-6;
+        mctsParams.budgetType = PlayerConstants.BUDGET_TIME;
+        mctsParams.budget = 150;
+        mctsParams.heuristic = new RootHeuristic();
+//        RHEAParams rheaParams = new RHEAParams();
+//        rheaParams.horizon = 10;
+//        rheaParams.discountFactor = 0.9;
+//        rheaParams.populationSize = 10;
+//        rheaParams.childCount = 10;
+//        rheaParams.crossoverType = RHEAEnums.CrossoverType.UNIFORM;
+//        rheaParams.eliteCount = 1;
+//        rheaParams.selectionType = RHEAEnums.SelectionType.TOURNAMENT;
+//        rheaParams.tournamentSize = 5;
+//        rheaParams.budgetType = PlayerConstants.BUDGET_TIME;
+//        rheaParams.budget = 100;
+//        rheaParams.breakMS = 0;
+//        players.add(new RHEAPlayer(rheaParams));
+//        players.add(new RHEAPlayer(rheaParams));
+//        players.add(new MCTSPlayer(mctsParams));
         /* Game parameter configuration. Set to null to ignore and use default parameters */
         String gameParams = null;
+        MCTSParams mctsParams2 = new MCTSParams();
+        mctsParams2.K = 1.0;
+        mctsParams2.rolloutLength = 40;
+        mctsParams2.maxTreeDepth = 30;
+        mctsParams2.treePolicy = MCTSEnums.TreePolicy.UCB;
+        mctsParams2.opponentTreePolicy = MCTSEnums.OpponentTreePolicy.OneTree;
+        mctsParams2.selectionPolicy = MCTSEnums.SelectionPolicy.SIMPLE;
+        mctsParams2.information = MCTSEnums.Information.Information_Set;
+        mctsParams2.rolloutType = MCTSEnums.Strategies.RANDOM;
+        mctsParams2.exploreEpsilon = 1e-6;
+        mctsParams2.budgetType = PlayerConstants.BUDGET_TIME;
+        mctsParams2.budget = 50;
+        RootHeuristic learnedHeurisitc = new RootHeuristic();
+        //cat
+//        learnedHeurisitc.setParameterValue("ScorePlayerWeight", 6.0);
+//        learnedHeurisitc.setParameterValue("ScoreOpponentWeight", 2.5488883412662267);
+//        learnedHeurisitc.setParameterValue("MapPresencePlayerWeight", 2.2697696734301798);
+//        learnedHeurisitc.setParameterValue("MapPresenceOpponentWeight", 4.843818140339498);
+//        learnedHeurisitc.setParameterValue("HandQualityWeight", 4.38081825882988);
+//        learnedHeurisitc.setParameterValue("OpponentHandQualityWeight", 1.566948678199581);
+//        learnedHeurisitc.setParameterValue("FactionSpecificPlayerWeight", 1.4003356851416076);
+//        learnedHeurisitc.setParameterValue("FactionSpecificOpponentWeight", 2.4776363338259477);
+        //Eyrie
+//        learnedHeurisitc.setParameterValue("ScorePlayerWeight", 5.616);
+//        learnedHeurisitc.setParameterValue("ScoreOpponentWeight", 3.112);
+//        learnedHeurisitc.setParameterValue("MapPresencePlayerWeight", 1.74);
+//        learnedHeurisitc.setParameterValue("MapPresenceOpponentWeight", 2.756);
+//        learnedHeurisitc.setParameterValue("HandQualityWeight", 0.56);
+//        learnedHeurisitc.setParameterValue("OpponentHandQualityWeight", 2.736);
+//        learnedHeurisitc.setParameterValue("FactionSpecificPlayerWeight", 3.092);
+//        learnedHeurisitc.setParameterValue("FactionSpecificOpponentWeight", 0.0);
+        //Woodland
+//        learnedHeurisitc.setParameterValue("ScorePlayerWeight", 5.65);
+//        learnedHeurisitc.setParameterValue("ScoreOpponentWeight", 2.03);
+//        learnedHeurisitc.setParameterValue("MapPresencePlayerWeight", 1.48);
+//        learnedHeurisitc.setParameterValue("MapPresenceOpponentWeight", 5.57);
+//        learnedHeurisitc.setParameterValue("HandQualityWeight", 0.0);
+//        learnedHeurisitc.setParameterValue("OpponentHandQualityWeight", 2.16);
+//        learnedHeurisitc.setParameterValue("FactionSpecificPlayerWeight", 0.41);
+//        learnedHeurisitc.setParameterValue("FactionSpecificOpponentWeight", 2.97);
+        //vagabond rhea
+//        learnedHeurisitc.setParameterValue("ScorePlayerWeight", 4.88);
+//        learnedHeurisitc.setParameterValue("ScoreOpponentWeight", 0.0);
+//        learnedHeurisitc.setParameterValue("MapPresencePlayerWeight", 3.50);
+//        learnedHeurisitc.setParameterValue("MapPresenceOpponentWeight", 6.0);
+//        learnedHeurisitc.setParameterValue("HandQualityWeight", 0.0);
+//        learnedHeurisitc.setParameterValue("OpponentHandQualityWeight", 0.49);
+//        learnedHeurisitc.setParameterValue("FactionSpecificPlayerWeight", 4.15);
+//        learnedHeurisitc.setParameterValue("FactionSpecificOpponentWeight", 2.51);
+        //cat rhea
+//        learnedHeurisitc.setParameterValue("ScorePlayerWeight", 5.706);
+//        learnedHeurisitc.setParameterValue("ScoreOpponentWeight", 3.45);
+//        learnedHeurisitc.setParameterValue("MapPresencePlayerWeight", 4.47);
+//        learnedHeurisitc.setParameterValue("MapPresenceOpponentWeight", 2.56);
+//        learnedHeurisitc.setParameterValue("HandQualityWeight", 0.022);
+//        learnedHeurisitc.setParameterValue("OpponentHandQualityWeight", 5.23);
+//        learnedHeurisitc.setParameterValue("FactionSpecificPlayerWeight", 0.552);
+//        learnedHeurisitc.setParameterValue("FactionSpecificOpponentWeight", 3.104);
+        //woodland rhea
+        learnedHeurisitc.setParameterValue("ScorePlayerWeight", 5.98);
+        learnedHeurisitc.setParameterValue("ScoreOpponentWeight", 1.74);
+        learnedHeurisitc.setParameterValue("MapPresencePlayerWeight", 2.12);
+        learnedHeurisitc.setParameterValue("MapPresenceOpponentWeight", 2.36);
+        learnedHeurisitc.setParameterValue("HandQualityWeight", 5.78);
+        learnedHeurisitc.setParameterValue("OpponentHandQualityWeight", 2.94);
+        learnedHeurisitc.setParameterValue("FactionSpecificPlayerWeight", 0.512);
+        learnedHeurisitc.setParameterValue("FactionSpecificOpponentWeight", 5.74);
+        mctsParams2.heuristic = learnedHeurisitc;
 
+
+        MCTSEAHParams mctseahParams = new MCTSEAHParams();
+        mctseahParams.K = 1.0;
+        mctseahParams.rolloutLength = 40;
+        mctseahParams.maxTreeDepth = 30;
+        mctseahParams.treePolicy = MCTSEAHEnums.TreePolicy.UCB;
+        mctseahParams.opponentTreePolicy = MCTSEAHEnums.OpponentTreePolicy.OneTree;
+        mctseahParams.selectionPolicy = MCTSEAHEnums.SelectionPolicy.SIMPLE;
+        mctseahParams.information = MCTSEAHEnums.Information.Information_Set;
+        mctseahParams.rolloutType = MCTSEAHEnums.Strategies.RANDOM;
+        mctseahParams.exploreEpsilon = 1e-6;
+        mctseahParams.budgetType = PlayerConstants.BUDGET_TIME;
+        mctseahParams.setParameterValue("budget", 50);
+        mctseahParams.setParameterValue("heuristicPopulationSize", 15);
+        mctseahParams.setParameterValue("heuristicCrossover",EvolutionaryHeuristicGenerator.crossoverTypes.UNIFORM);
+        mctseahParams.setParameterValue("heuristicPath", "data/root/heuristic_population.json");
+        mctseahParams.setParameterValue("train", false);
+
+        RHEAEAParams rheaeaParams = new RHEAEAParams();
+        rheaeaParams.horizon = 10;
+        rheaeaParams.discountFactor = 0.9;
+        rheaeaParams.populationSize = 10;
+        rheaeaParams.childCount = 10;
+        rheaeaParams.crossoverType = RHEAEAEnums.CrossoverType.UNIFORM;
+        rheaeaParams.eliteCount = 1;
+        rheaeaParams.selectionType = RHEAEAEnums.SelectionType.TOURNAMENT;
+        rheaeaParams.tournamentSize = 5;
+        rheaeaParams.budgetType = PlayerConstants.BUDGET_TIME;
+        rheaeaParams.setParameterValue("budget", 50);
+        rheaeaParams.setParameterValue("heuristicPopulationSize", 15);
+        rheaeaParams.setParameterValue("heuristicCrossover",EvolutionaryHeuristicGenerator.crossoverTypes.UNIFORM);
+        rheaeaParams.setParameterValue("heuristicPath", "data/root/heuristic_population.json");
+        rheaeaParams.setParameterValue("train", false);
+
+        RHEAParams rheaParams2 = new RHEAParams();
+        rheaParams2.horizon = 10;
+        rheaParams2.discountFactor = 0.9;
+        rheaParams2.populationSize = 10;
+        rheaParams2.childCount = 10;
+        rheaParams2.crossoverType = RHEAEnums.CrossoverType.UNIFORM;
+        rheaParams2.eliteCount = 1;
+        rheaParams2.selectionType = RHEAEnums.SelectionType.TOURNAMENT;
+        rheaParams2.tournamentSize = 5;
+        rheaParams2.budgetType = PlayerConstants.BUDGET_TIME;
+        rheaParams2.budget = 50;
+        rheaParams2.breakMS = 0;
+        rheaParams2.heuristic = learnedHeurisitc;
+
+        RHEAParams rheaParams = new RHEAParams();
+        rheaParams.horizon = 10;
+        rheaParams.discountFactor = 0.9;
+        rheaParams.populationSize = 10;
+        rheaParams.childCount = 10;
+        rheaParams.crossoverType = RHEAEnums.CrossoverType.UNIFORM;
+        rheaParams.eliteCount = 1;
+        rheaParams.selectionType = RHEAEnums.SelectionType.TOURNAMENT;
+        rheaParams.tournamentSize = 5;
+        rheaParams.budgetType = PlayerConstants.BUDGET_TIME;
+        rheaParams.budget = 150;
+        rheaParams.breakMS = 0;
+        players.add(new MCTSPlayer(mctsParams));
+        players.add(new HumanGUIPlayer(ac));
+        players.add(new MCTSPlayer(mctsParams));
+        players.add(new RHEAPlayer(rheaParams));
+
+
+//        players.add(new MCTSPlayer(mctsParams));
+//        players.add(new MCTSPlayer(mctsParams));
+//        players.add(new MCTSPlayer(mctsParams));
+//        players.add(new RHEAPlayer(rheaParams));
         /* Run! */
         runOne(GameType.valueOf(gameType), gameParams, players, seed, false, null, useGUI ? ac : null, turnPause);
 
         /* Run multiple games */
-//        ArrayList<GameType> games = new ArrayList<>();
-//        games.add(Connect4);
-//        runMany(games, players, 100L, 5, false, false, null, turnPause);
-//        runMany(new ArrayList<GameType>() {{add(Uno);}}, players, 100L, 100, false, false, null, turnPause);
+        ArrayList<GameType> games = new ArrayList<>();
+        games.add(Root);
+        runMany(games, players, 100L, 100, false, true, null, turnPause);
+        //runMany(new ArrayList<GameType>() {{add(Uno);}}, players, 100L, 100, false, false, null, turnPause);
     }
 
 }

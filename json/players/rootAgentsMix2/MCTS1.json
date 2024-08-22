@@ -1,0 +1,24 @@
+{
+  "class" : "players.mcts.MCTSParams",
+  "K" : 1.0,
+  "rolloutLength" : 40,
+  "maxTreeDepth" : 40,
+  "treePolicy" : "UCB_Tuned",
+  "opponentTreePolicy" : "MultiTree",
+  "selectionPolicy" : "SIMPLE",
+  "information" : "Information_Set",
+  "rolloutType" : "RANDOM",
+  "expansionPolicy" : "RANDOM",
+  "epsilon" : 1e-6,
+  "budgetType" : "BUDGET_TIME",
+  "budget" : 100,
+  "MASTGamma":0,
+  "MAST":"Both",
+  "breakMS" : 0,
+  "heuristic" : {
+    "class" : "games.root_final.RootHeuristic"
+  },
+  "opponentHeuristic" : {
+    "class" : "games.root_final.RootHeuristic"
+  }
+}

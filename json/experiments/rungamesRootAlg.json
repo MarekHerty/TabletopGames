@@ -1,0 +1,12 @@
+{
+  "game" : "Root",
+  "nPlayers" : 4,
+  "mode" : "exhaustive",
+  "matchups" : 6,
+  "verbose" : true,
+  "seed" : 740222,
+  "playerDirectory" : "json/players/rootAgentsMix2",
+  "listener" : "json/listeners/basiclistener.json",
+  "destDir" : "outputdirAgentTypes",
+  "output" : "outputdirAgentTypes/Tournament.log"
+}

@@ -1,0 +1,9 @@
+{
+  "game" : "Root",
+  "nPlayers" : 4,
+  "mode" : "exhaustive",
+  "matchups" : 2,
+  "verbose" : true,
+  "seed" : 740242,
+  "playerDirectory" : "json/players/rootAgentsRHEA"
+}

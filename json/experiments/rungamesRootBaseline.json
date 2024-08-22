@@ -1,0 +1,9 @@
+{
+  "game" : "Root",
+  "nPlayers" : 4,
+  "mode" : "exhaustive",
+  "matchups" : 100,
+  "verbose" : true,
+  "seed" : 740251,
+  "playerDirectory" : "json/players/RootBaseline"
+}

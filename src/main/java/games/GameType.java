@@ -206,7 +206,7 @@ public enum GameType {
             Arrays.asList(GridMovement),
             CCGameState.class, CCForwardModel.class, CCParameters.class, CCGUIManager.class),
 
-    Root(2, 4, null, null,RootGameState.class, RootForwardModel .class, RootParameters.class, RootGUIManager.class);
+    Root(2, 4, Arrays.asList(Strategy,Wargame), Arrays.asList(HandManagement, Campaign),RootGameState.class, RootForwardModel .class, RootParameters.class, RootGUIManager.class);
 
     // Core classes where the game is defined
     final Class<? extends AbstractGameState> gameStateClass;

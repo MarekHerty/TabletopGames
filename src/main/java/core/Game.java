@@ -887,7 +887,7 @@ public class Game {
         mctsParams.rolloutType = MCTSEnums.Strategies.RANDOM;
         mctsParams.exploreEpsilon = 1e-6;
         mctsParams.budgetType = PlayerConstants.BUDGET_TIME;
-        mctsParams.budget = 150;
+        mctsParams.budget = 50;
         mctsParams.heuristic = new RootHeuristic();
 //        RHEAParams rheaParams = new RHEAParams();
 //        rheaParams.horizon = 10;
@@ -1033,10 +1033,11 @@ public class Game {
         rheaParams.selectionType = RHEAEnums.SelectionType.TOURNAMENT;
         rheaParams.tournamentSize = 5;
         rheaParams.budgetType = PlayerConstants.BUDGET_TIME;
-        rheaParams.budget = 150;
+        rheaParams.budget = 50;
         rheaParams.breakMS = 0;
         players.add(new MCTSPlayer(mctsParams));
-        players.add(new HumanGUIPlayer(ac));
+        //players.add(new HumanGUIPlayer(ac));
+        players.add(new MCTSPlayer(mctsParams));
         players.add(new MCTSPlayer(mctsParams));
         players.add(new RHEAPlayer(rheaParams));
 

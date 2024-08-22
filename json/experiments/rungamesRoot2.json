@@ -2,7 +2,7 @@
   "game" : "Root",
   "nPlayers" : 4,
   "mode" : "exhaustive",
-  "matchups" : 2,
+  "matchups" : 24,
   "verbose" : true,
   "seed" : 740241,
   "playerDirectory" : "json/players/rootAgentsRMHC"

@@ -1,13 +1,17 @@
 package players.mctsEAHeuristic;
 
 import core.AbstractGameState;
+import core.AbstractPlayer;
 import core.actions.AbstractAction;
 import core.interfaces.IActionHeuristic;
 import core.interfaces.IActionKey;
+import players.simple.BoltzmannActionPlayer;
 import utilities.Pair;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class MASTActionHeuristic implements IActionHeuristic {
 
@@ -22,7 +26,7 @@ public class MASTActionHeuristic implements IActionHeuristic {
     }
 
     @Override
-    public double evaluateAction(AbstractAction action, AbstractGameState state) {
+    public double evaluateAction(AbstractAction action, AbstractGameState state, List<AbstractAction> contextActions) {
         Object key = actionKey == null ? action : actionKey.key(action);
         Map<Object, Pair<Integer, Double>> MAST = MASTStatistics.get(state.getCurrentPlayer());
         if (MAST.containsKey(key)) {
